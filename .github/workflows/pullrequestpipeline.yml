@@ -1,0 +1,37 @@
+nome: ServiceNow Pull Request Pipeline
+
+ sobre: 
+   pull_request:
+     galhos:
+       - mestre
+     
+ empregos:
+   construir:
+   # O objetivo deste trabalho é executar o ATF na ramificação atual
+     nome: Executar ATF na instância dev
+     run-on: ubuntu-latest
+
+     passos:
+
+       - nome: ServiceNow CI/CD Aplicar alterações
+         usa: ServiceNow/sncicd-apply-changes@1.2.1
+         ambiente:
+           snowUsername: ${{ secrets.NOW_USERNAME }}
+           snowPassword: ${{ secrets.NOW_PASSWORD }}
+           snowSourceInstance: ${{ segredos.NOW_DEV_INSTANCE }}
+           appSysID: ${{ secrets.APP_SYS_ID }}
+
+       - nome: Executar testes 
+         id: atf_test_dev
+         usa: ServiceNow/sncicd-tests-run@1.0.0
+         com:
+           nome do navegador:
+           versão do navegador:
+           osName:
+           osVersão:
+           testSuiteSysId: ${{ secrets.TEST_SUITE_ID }}
+           testSuiteName:
+         ambiente:
+           snowUsername: ${{ secrets.NOW_USERNAME }}
+           snowPassword: ${{ secrets.NOW_PASSWORD }}
+           snowInstallInstance: ${{ segredos.NOW_DEV_INSTANCE }}
